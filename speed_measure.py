@@ -34,7 +34,6 @@ class Tachometer:
         if current_value != self.lastReading and current_value == 1:
             self.cycleTime = self.hitsSinceLastHigh / Tachometer.RESOLUTION
             self.hitsSinceLastHigh = 0
-            print(str(self.get_current_rpm()) + " - " + str(self.cycleTime))
         else:
             self.hitsSinceLastHigh += 1
         self.lastReading = current_value
