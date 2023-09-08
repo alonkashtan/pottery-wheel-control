@@ -1,4 +1,5 @@
 import micropython
+from typing import Callable
 from machine import Pin
 
 """Emits events of 24 step rotary"""
@@ -39,9 +40,9 @@ class Rotary:
         else:
             micropython.schedule(self.call_handlers, Rotary.SW_PRESS)
 
-    def add_handler(self, handler):
+    def add_handler(self, handler: Callable[[str], None]):
         self.handlers.append(handler)
 
-    def call_handlers(self, type):
+    def call_handlers(self, event_type):
         for handler in self.handlers:
-            handler(type)
+            handler(event_type)

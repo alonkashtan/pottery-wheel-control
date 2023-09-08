@@ -1,5 +1,6 @@
 from micropython import const
 from machine import Pin, Timer
+import time
 
 
 # Useful calculators for working with Tachometer code:
@@ -14,6 +15,8 @@ class Tachometer:
 
     RESOLUTION: int = const(1000)
     """sampling time. Max RPS is half of this"""
+    TOO_SLOW_SECONDS: int = const(20)
+    """after this number of seconds with no hits, the RPM will be considered 0"""
 
     def __init__(self, pin) -> None:
         """
@@ -36,10 +39,16 @@ class Tachometer:
             self.hitsSinceLastHigh = 0
         else:
             self.hitsSinceLastHigh += 1
+
+        if self.hitsSinceLastHigh > Tachometer.TOO_SLOW_SECONDS * Tachometer.TOO_SLOW_SECONDS:
+            self.cycleTime = 0
         self.lastReading = current_value
 
     def get_current_rpm(self):
         return 60 / self.cycleTime if self.cycleTime != 0 else 0
 
     def get_current_cycle_time(self):
+        """
+        :returns: cycle time, or zero if too long (e.g. measured object is stopped) or unknown
+        """
         return self.cycleTime

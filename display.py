@@ -1,6 +1,6 @@
 import time
 from micropython import const
-from display_libs.lcd1602 import LCD1602
+from libs.lcd1602 import LCD1602
 from machine import I2C, Pin
 
 I2C_ADDR = const(0X3E)
@@ -24,6 +24,7 @@ class Display:
         self._refresh_text()
 
     def _refresh_text(self):
+        self._display.clear()
         self._display.home()
         self._display.print("Max ")
         self._display.print("{:>3}".format(str(self.max_speed)))
@@ -54,7 +55,7 @@ class Display:
 
     @current_speed.setter
     def current_speed(self, value):
-        self._validate_speed(value)
+        # self._validate_speed(value)
         self._currentSpeed = value
         self._refresh_text()
 
@@ -67,3 +68,9 @@ class Display:
         self._validate_speed(value)
         self._requestedSpeed = value
         self._refresh_text()
+
+    def set_is_on(self, is_on: bool):
+        if is_on:
+            self._display.display()
+        else:
+            self._display.no_display()
