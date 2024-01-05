@@ -18,13 +18,13 @@ class Display:
 
         i2c = I2C(0, scl=scl, sda=sda, freq=400000)
         self._display = LCD1602(i2c, 2, 16)
+        self._display.clear()
         self._maxSpeed = initial_max_speed
         self._currentSpeed = initial_curr_speed
         self._requestedSpeed = initial_requested_speed
         self._refresh_text()
 
     def _refresh_text(self):
-        self._display.clear()
         self._display.home()
         self._display.print("Max ")
         self._display.print("{:>3}".format(str(self.max_speed)))
@@ -37,7 +37,7 @@ class Display:
     @staticmethod
     def _validate_speed(value):
         if value < 0 or value > 999:
-            raise "Speed must be in [0-999] (" + str(value) + " given)"
+            raise Exception("Speed must be in [0-999] (" + str(value) + " given)")
 
     @property
     def max_speed(self):

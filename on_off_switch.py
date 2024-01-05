@@ -7,7 +7,7 @@ class OnOffSwitch:
     def __init__(self, pin) -> None:
         super().__init__()
 
-        self._pin = Pin(pin, Pin.IN)
+        self._pin = Pin(pin, Pin.OUT)
 
     def switch_on(self):
         self._pin.value(1)

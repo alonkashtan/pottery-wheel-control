@@ -13,7 +13,6 @@ class ServoSpeedControl(SpeedControl):
     def set_speed(self, percent):
         required_value = round(percent * (Config.SERVO_MAX_VALUE - Config.SERVO_MIN_VALUE) / 100) + \
                          Config.SERVO_MIN_VALUE
-        print(required_value)
         self.set_servo_value(required_value)
 
     def set_servo_value(self, required_value):

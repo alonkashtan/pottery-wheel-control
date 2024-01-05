@@ -1,5 +1,4 @@
 import micropython
-from typing import Callable
 from machine import Pin
 
 """Emits events of 24 step rotary"""
@@ -12,7 +11,7 @@ class Rotary:
     def __init__(self, dt, clk, button):
         self.dt_pin = Pin(dt, Pin.IN, Pin.PULL_DOWN)
         self.clk_pin = Pin(clk, Pin.IN, Pin.PULL_DOWN)
-        self.button_pin = Pin(button, Pin.IN, Pin.PULL_DOWN)
+        self.button_pin = Pin(button, Pin.IN, Pin.PULL_UP)
         self.last_status = (self.dt_pin.value() << 1) | self.clk_pin.value()
         self.dt_pin.irq(handler=self.rotary_change, trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING)
         self.clk_pin.irq(handler=self.rotary_change, trigger=Pin.IRQ_FALLING | Pin.IRQ_RISING)
@@ -25,9 +24,9 @@ class Rotary:
         if new_status == self.last_status:
             return
         transition = (self.last_status << 2) | new_status
-        if transition == 0b1110:
+        if transition == 0b1100 or transition == 0b111 or transition == 1:
             micropython.schedule(self.call_handlers, Rotary.ROT_CW)
-        elif transition == 0b1101:
+        elif transition == 0b1101 or transition == 0b100 or transition == 0b11:
             micropython.schedule(self.call_handlers, Rotary.ROT_CCW)
         self.last_status = new_status
 
@@ -40,7 +39,11 @@ class Rotary:
         else:
             micropython.schedule(self.call_handlers, Rotary.SW_PRESS)
 
-    def add_handler(self, handler: Callable[[str], None]):
+
+    def add_handler(self, handler):
+        """
+        :param Callable[[str], None] handler: a function that recirves a string
+        """
         self.handlers.append(handler)
 
     def call_handlers(self, event_type):
