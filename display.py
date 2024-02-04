@@ -16,23 +16,32 @@ class Display:
         scl = Pin(scl_pin)
         # i2c = machine.I2C(0, sda=sda, scl=scl, freq=400000)
 
-        i2c = I2C(0, scl=scl, sda=sda, freq=400000)
-        self._display = LCD1602(i2c, 2, 16)
-        self._display.clear()
+        self._i2c = I2C(0, scl=scl, sda=sda, freq=400000)
+        self._init_display()
         self._maxSpeed = initial_max_speed
         self._currentSpeed = initial_curr_speed
         self._requestedSpeed = initial_requested_speed
         self._refresh_text()
 
+    def _init_display(self):
+        self._display = LCD1602(self._i2c, 2, 16)
+        self._display.clear()
+
+
     def _refresh_text(self):
-        self._display.home()
-        self._display.print("Max ")
-        self._display.print("{:>3}".format(str(self.max_speed)))
-        self._display.print("  Set ")
-        self._display.print("{:>3}".format(str(self.requested_speed)))
-        self._display.setCursor(0, 1)
-        self._display.print("Current ")
-        self._display.print("{:>3}".format(str(self.current_speed)))
+        try:
+            self._display.home()
+            self._display.print("Max ")
+            self._display.print("{:>3.0f}".format(self.max_speed))
+            self._display.print("  Set ")
+            self._display.print("{:>3.0f}".format(self.requested_speed))
+            self._display.setCursor(0, 1)
+            self._display.print("Current ")
+            self._display.print("{:>3.0f}".format(self.current_speed))
+        except Exception as e:
+            # There are random exceptions being thrown that get the display 'stuck' (i.e. every operation throws an
+            # exception). In that case, we restart the protocol to recover.
+            self._init_display()
 
     @staticmethod
     def _validate_speed(value):

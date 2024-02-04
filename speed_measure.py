@@ -40,7 +40,7 @@ class Tachometer:
         else:
             self.hitsSinceLastHigh += 1
 
-        if self.hitsSinceLastHigh > Tachometer.TOO_SLOW_SECONDS * Tachometer.TOO_SLOW_SECONDS:
+        if self.hitsSinceLastHigh > Tachometer.TOO_SLOW_SECONDS * Tachometer.RESOLUTION:
             self.cycleTime = 0
         self.lastReading = current_value
 
