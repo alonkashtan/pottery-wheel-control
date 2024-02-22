@@ -1,3 +1,4 @@
+import time
 from micropython import const
 import sys
 
@@ -98,11 +99,10 @@ class PotteryWheelManager:
             elif self._state == self.RUNNING_STATE:
                 self.main_switch.switch_on()
 
-                pedal_percentage = self.pedal_input.get_pedal_percentage()
-                requested_rpm = pedal_percentage * self._maxRpm / 100
+                requested_rpm = percentage * self._maxRpm / 100
                 requested_percentage = 100 * requested_rpm / Config.MAX_SUPPORTED_RPM
                 self.speed_control.set_speed(requested_percentage)
-                if pedal_percentage == 0:
+                if percentage == 0:
                     self._state = self.STOPPED_HOLD_STATE
 
             self.display.current_speed = current_speed
@@ -110,6 +110,10 @@ class PotteryWheelManager:
             self.display.requested_speed = requested_rpm
 
             self.number_of_consecutive_exceptions = 0
+
+            # without this, seems like the MCU overloads and gets "stuck" (responding very slow or not at all)
+            # after a while
+            time.sleep(0.1)
         except Exception as e:
             print('Failure on main loop: ' + str(e))
             sys.print_exception(e)
