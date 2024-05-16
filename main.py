@@ -4,11 +4,11 @@ from rotary import Rotary
 from speed_measure import Tachometer
 from pedal_input import PedalInput
 from servo_speed_control import ServoSpeedControl
-from on_off_switch import OnOffSwitch
+from on_off_switch import OnOffSwitch, ServoOnOffSwitch
 from pottery_wheel_manager import PotteryWheelManager
 
 pedal_input = PedalInput(Pinout.PEDAL_POT)
-main_switch = OnOffSwitch(Pinout.MAIN_SWITCH)
+main_switch = ServoOnOffSwitch(Pinout.MAIN_SWITCH)
 speed_measure = Tachometer(Pinout.LIGHT_SENSOR)
 speed_control = ServoSpeedControl(Pinout.SERVO)
 display = Display(Pinout.DISPLAY_SDA, Pinout.DISPLAY_SCL)
