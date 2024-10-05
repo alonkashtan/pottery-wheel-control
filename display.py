@@ -37,7 +37,7 @@ class Display:
             self._display.print("{:>3.0f}".format(self.requested_speed))
             self._display.setCursor(0, 1)
             self._display.print("Current ")
-            self._display.print("{:>3.0f}".format(self.current_speed))
+            self._display.print("{:>6.0f}".format(self.current_speed))
         except Exception as e:
             # There are random exceptions being thrown that get the display 'stuck' (i.e. every operation throws an
             # exception). In that case, we restart the protocol to recover.
