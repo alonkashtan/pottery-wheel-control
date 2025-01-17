@@ -8,7 +8,7 @@ class Config:
     PEDAL_MIN_VALUE = const(4000)
     PEDAL_MAX_VALUE = const(42000)
 
-    ON_OFF_SERVO_ON_VALUE = const(1920000)
+    ON_OFF_SERVO_ON_VALUE = const(1935000)
     ON_OFF_SERVO_OFF_VALUE = const(1010000)
 
     MAX_SUPPORTED_RPM = const(300)
